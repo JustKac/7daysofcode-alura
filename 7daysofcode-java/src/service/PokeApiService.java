@@ -5,9 +5,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import enumerator.HttpStatusCode;
 import enumerator.PokemonResource;
+import model.Pokemon;
+import util.JsonUtil;
 
 public class PokeApiService {
 
@@ -16,7 +20,8 @@ public class PokeApiService {
 
     public static String buscaPaginada(PokemonResource resource, int limit, int offset) throws Exception {
 
-        String urlParaChamada = String.format("%s/%s?limit=%d&offset=%d", REQUEST_URL, resource.getResource(), limit, offset);
+        String urlParaChamada = String.format("%s/%s?limit=%d&offset=%d", REQUEST_URL, resource.getResource(), limit,
+                offset);
 
         try {
 
@@ -58,5 +63,21 @@ public class PokeApiService {
         } catch (Exception e) {
             throw new Exception("ERRO: " + e);
         }
+    }
+
+    public static List<Pokemon> getPokemonList(int limit, int offset) throws Exception {
+
+        String response = PokeApiService.buscaPaginada(PokemonResource.POKEMON, limit, offset);
+        List<String> pokemons = JsonUtil.getObectList(response, "name");
+        List<String> urls = JsonUtil.getObectList(response, "url");
+
+        int length = pokemons.size();
+        List<Pokemon> pokemonList = new ArrayList<>();
+
+        for (int i = 0; i < length; i++) {
+            pokemonList.add(new Pokemon(pokemons.get(i), urls.get(i)));
+        }
+        
+        return pokemonList;
     }
 }
