@@ -2,25 +2,45 @@ package model;
 
 public class Pokemon {
 
+    private Integer id;
     private String name;
-    private String url;
+    private String image;
 
-    public Pokemon(String name, String url) {
+    public Pokemon() {
+    }
+
+    public Pokemon(Integer id, String name) {
+        this.id = id;
         this.name = name;
-        this.url = url;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getUrl() {
-        return url;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
     public String toString() {
         // retorna uma string no formato json
-        return "{\"name\":\"" + name + "\",\"url\":\"" + url + "\"}";
+        return "{\"id\":" + id + ",\"name\":\"" + name + "\",\"image\":\"" + image + "\"}";
     }
 }

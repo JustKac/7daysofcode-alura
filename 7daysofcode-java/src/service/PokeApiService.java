@@ -68,15 +68,26 @@ public class PokeApiService {
     public static List<Pokemon> getPokemonList(int limit, int offset) throws Exception {
 
         String response = PokeApiService.buscaPaginada(PokemonResource.POKEMON, limit, offset);
-        List<String> pokemons = JsonUtil.getObectList(response, "name");
         List<String> urls = JsonUtil.getObectList(response, "url");
+        List<String> pokemons = JsonUtil.getObectList(response, "name");
 
         int length = pokemons.size();
         List<Pokemon> pokemonList = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
-            pokemonList.add(new Pokemon(pokemons.get(i), urls.get(i)));
+            Integer id = Integer.parseInt(urls.get(i).split("/")[6]);
+            pokemonList.add(new Pokemon(id, pokemons.get(i)));
         }
+
+        pokemonList.forEach(p -> {
+            try {
+                String pokemonInfo = buscaPorId(PokemonResource.POKEMON, p.getId());
+                p.setImage(JsonUtil.getObectList(pokemonInfo, "front_default").get(0));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        });
         
         return pokemonList;
     }
