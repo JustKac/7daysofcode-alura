@@ -68,8 +68,8 @@ public class PokeApiService {
     public static List<Pokemon> getPokemonList(int limit, int offset) throws Exception {
 
         String response = PokeApiService.buscaPaginada(PokemonResource.POKEMON, limit, offset);
-        List<String> urls = JsonUtil.getObectList(response, "url");
-        List<String> pokemons = JsonUtil.getObectList(response, "name");
+        List<String> urls = JsonUtil.getObjectList(response, "url");
+        List<String> pokemons = JsonUtil.getObjectList(response, "name");
 
         int length = pokemons.size();
         List<Pokemon> pokemonList = new ArrayList<>();
@@ -82,7 +82,8 @@ public class PokeApiService {
         pokemonList.forEach(p -> {
             try {
                 String pokemonInfo = buscaPorId(PokemonResource.POKEMON, p.getId());
-                p.setImage(JsonUtil.getObectList(pokemonInfo, "front_default").get(0));
+                p.setImage(JsonUtil.getObjectList(pokemonInfo, "front_default").get(0));
+                p.setType(JsonUtil.getObjectList(pokemonInfo, "type\":{\"name"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
